@@ -286,9 +286,10 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
             int ep = scanStartInd[i] + (scanEndInd[i] - scanStartInd[i]) * (j + 1) / 6 - 1;
 
             TicToc t_tmp;
-            std::sort (cloudSortInd + sp, cloudSortInd + ep + 1, comp); //sort based on lowest cloudCurvature to highest 
+            std::sort (cloudSortInd + sp, cloudSortInd + ep + 1, comp); //sort based on lowest cloudCurvature to highest
             t_q_sort += t_tmp.toc();
 
+            //choose 2 edge point and 4 planar points
 
             int largestPickedNum = 0;
             for (int k = ep; k >= sp; k--)
@@ -393,6 +394,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
 
             for (int k = sp; k <= ep; k++)
             {
+                // all of the points with label 0 or -1 (plannar) are pushed here
                 if (cloudLabel[k] <= 0)
                 {
                     surfPointsLessFlatScan->push_back(laserCloud->points[k]);
